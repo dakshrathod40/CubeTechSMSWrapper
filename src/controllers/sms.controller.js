@@ -1,21 +1,22 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService, smsService } = require('../services');
+const { smsService } = require('../services');
+const ApiError = require('../utils/ApiError');
 
-const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
-});
+const sendSMS = catchAsync(async (req, res) => {
+  const verifiedMobileNumbers = await smsService.verifyMobileNumbers(req.body);
+  if (!verifiedMobileNumbers) {
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Please target Indian origin numbers only.');
+  }
+  const verifiedText = await smsService.verifyText(req.body);
+  if (!verifiedText) {
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Please match the message with template.');
+  }
+  const smsResponse = await smsService.sendSMS(req.body);
 
-const login = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await smsService.loginUserWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res.send(smsResponse);
 });
 
 module.exports = {
-  register,
-  login,
+  sendSMS
 };

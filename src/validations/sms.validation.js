@@ -1,22 +1,25 @@
 const Joi = require('joi');
-const { password } = require('./custom.validation');
 
-const register = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
-  }),
+const defaultBody = {
+  username: Joi.string().required(),
+  message: Joi.string().required(),
+  sendername: Joi.string().required(),
+  smstype: Joi.string().valid('TRANS').required(),
+  numbers: Joi.array().items(Joi.string()).required(),
+  apikey: Joi.string().required(),
+};
+const sendSMS = {
+  body: Joi.object().keys(defaultBody),
 };
 
-const login = {
+const scheduleSMS = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
+    ...defaultBody,
+    scheduled: Joi.string().required(),
   }),
 };
 
 module.exports = {
-  register,
-  login,
+  sendSMS,
+  scheduleSMS,
 };
