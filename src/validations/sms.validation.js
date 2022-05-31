@@ -4,6 +4,7 @@ const defaultBody = {
   username: Joi.string().required(),
   message: Joi.string().required(),
   sendername: Joi.string().required(),
+  templateId: Joi.string().required(),
   smstype: Joi.string().valid('TRANS').required(),
   numbers: Joi.array().items(Joi.string()).required(),
   apikey: Joi.string().required(),
