@@ -1,6 +1,6 @@
 const express = require('express');
+const { smsController } = require('../../controllers');
 const validate = require('../../middlewares/validate');
-const smsController = require('../../controllers/sms.controller');
 const { smsValidation } = require('../../validations');
 
 const router = express.Router();

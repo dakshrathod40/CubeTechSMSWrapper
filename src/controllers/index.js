@@ -1,1 +1,1 @@
-module.exports.userController = require('./sms.controller');
+module.exports.smsController = require('./sms.controller');

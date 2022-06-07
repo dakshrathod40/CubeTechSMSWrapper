@@ -1,12 +1,15 @@
-const { apiService } = require('.');
+const { cubeTechUrl } = require('../config/config');
 const { templateMapper } = require('../constants');
+const { getRequest } = require('../utils/apiRequests');
 
 /**
  * Send a SMS to one number or multiple SMS
  */
-const sendSMS = async (body) => {
-  const apiResponse = await apiService.sendSMS(body, {});
-  return apiResponse;
+const sendSMS = async ({ templateId, ...body }) => {
+
+  const url = `${cubeTechUrl}/sendSMS`;
+  const response = await getRequest(url, body);
+  return response;
 };
 
 /**
@@ -23,7 +26,7 @@ const verifyMobileNumbers = async ({ numbers }) => {
 const verifyText = async ({ message, templateId }) => {
   const regex = templateMapper[templateId];
   if (regex) {
-    const matches = message.matchAll(regex);
+    const matches = [...message.matchAll(regex)];
     return !!matches.length && matches.every((match) => match.length < 31);
   }
   return false;

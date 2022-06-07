@@ -2,7 +2,7 @@ const axios = require('axios');
 const { timeOut } = require('../config/config');
 
 // eslint-disable-next-line import/prefer-default-export
-const getRequest = async (url, params, headers, cancelToken) => {
+const getRequest = async (url, params, headers = {}, cancelToken) => {
   let queryParams = '';
   if (params && Object.keys(params).length) {
     queryParams = Object.keys(params)
